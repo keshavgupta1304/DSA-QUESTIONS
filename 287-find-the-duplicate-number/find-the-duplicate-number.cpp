@@ -1,17 +1,31 @@
 class Solution {
 public:
     int findDuplicate(vector<int>& nums) {
-        vector<int> duplicate(nums);
-        sort(duplicate.begin(),duplicate.end());
-        int i=0;
-        for(i=0;i<duplicate.size()-1;i++)
+        //binary search
+        int left =1; //smallest possible number in range
+        int right = nums.size()-1; //n-highest number in range
+        while(left<right)
         {
-            if(duplicate[i]==duplicate[i+1])
+            int mid = left + (right-left)/2;
+            int count=0;
+            //count numbers that are less or equal to mid range
+            for(int num : nums)
             {
-                break;
+                if(num <= mid)
+                {
+                    count++;
+                }
+            }
+            //Now if the count is greater than mid it means the dupliacte no lies in the left half
+            if(count>mid)
+            {
+                right=mid;
+            }
+            else
+            {
+                left=mid+1;
             }
         }
-        return duplicate[i];
-
+        return left;
     }
 };
