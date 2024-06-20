@@ -2,7 +2,8 @@ class Solution {
 public:
     int maxDistance(vector<int>& position, int m) {
         sort(position.begin(), position.end());
-        int l = 1, r = position.back() - position[0];//l for lowest possible distance,r for max possible distance
+        int l = 1;
+        int r = (position[position.size()-1]-position[0])/(m-1);
         int ans = -1;//maximum minimum force
         while(l <= r) {
             int mid = l + (r - l) / 2; //proposed Force
