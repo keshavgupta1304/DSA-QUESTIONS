@@ -8,6 +8,7 @@ public:
             if(i>=k && nums[i-k]==2)
             {
                 currentFlips--;
+                nums[i-k]-=2;
             }
             if((currentFlips%2)==nums[i])
             {
