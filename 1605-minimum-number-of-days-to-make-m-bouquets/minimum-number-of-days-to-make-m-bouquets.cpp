@@ -1,45 +1,50 @@
 class Solution {
 public:
+
+    bool isPossibleSol(vector<int>& bloomDay, int m, int k,int mid)
+    {
+        int noOfBouqets=0;
+        int noOfFlowers=0;
+        for(int i=0;i<bloomDay.size();i++)
+        {
+            if(bloomDay[i]<=mid)
+            {
+                noOfFlowers++;
+            }
+            else
+            {
+                noOfFlowers=0;
+            }
+            if(noOfFlowers == k)
+            {
+                noOfBouqets++;
+                noOfFlowers=0;
+            }
+        }
+        return noOfBouqets>=m;
+    }
+
     int minDays(vector<int>& bloomDay, int m, int k) {
-        if(bloomDay.size()<(long long)m * k)
+        if((long long)m*k > bloomDay.size())
         {
             return -1;
         }
-        int left=1;
-        int right=1e9;
-        while(left<right)
+        long long left=0;
+        long long right=INT_MAX;
+        long long minNoOfDays=-1;
+        while(left<=right)
         {
-            int mid=left+((right-left)/2);
-            if(canMakeBouqets(bloomDay,m,k,mid))
+            long long mid=left+(right-left)/2;
+            if(isPossibleSol(bloomDay,m,k,mid))
             {
-                right=mid;
+                minNoOfDays=mid;
+                right=mid-1;
             }
-            else{
+            else
+            {
                 left=mid+1;
             }
         }
-        return left;
-    }
-    bool canMakeBouqets(vector<int>& bloomDay, int m, int k,int mid){
-        int totalNoOfBouqetsFormed=0;
-        for(int i=0;i<bloomDay.size();i++)
-        {
-            int countFlowersThatBloom=0;
-            while(i<bloomDay.size() && countFlowersThatBloom < k && bloomDay[i]<=mid)
-            {
-                countFlowersThatBloom++;
-                i++;
-            }
-            if(countFlowersThatBloom==k)
-            {
-                totalNoOfBouqetsFormed++;
-                i--;
-            }
-            if(totalNoOfBouqetsFormed>=m)
-            {
-                return true;
-            }
-        }
-        return false;
+        return (int)minNoOfDays;
     }
 };
