@@ -1,25 +1,42 @@
 class Solution {
 public:
-    int maxDistance(vector<int>& position, int m) {
-        sort(position.begin(), position.end());
-        int l = 1;
-        int r = (position[position.size()-1]-position[0])/(m-1);
-        int ans = -1;//maximum minimum force
-        while(l <= r) {
-            int mid = l + (r - l) / 2; //proposed Force
-            //first ball will be placed at 0th index,therebore 1 ball placed
-            int lastPosition = position[0], balls = 1;
-            for(int i = 1; i < position.size(); i++) {
-                if(position[i] - lastPosition >= mid) {
-                    lastPosition = position[i];
-                    balls++;
+
+    bool isPossibleSol(vector<int>& position, int m,int mid)
+    {
+        int ballCount=1;
+        int lastPos=position[0];
+        for(int i=0;i<position.size();i++)
+        {
+            if(position[i]-lastPos>=mid)
+            {
+                ballCount++;
+                if(ballCount==m)
+                {
+                    return true;
                 }
+                lastPos=position[i];
             }
-            if(balls >= m) {
-                ans = mid;
-                l = mid + 1;
-            } else {
-                r = mid - 1;
+        }
+        return false;
+    }
+    
+    int maxDistance(vector<int>& position, int m) {
+        long long left=0;
+        sort(position.begin(), position.end());
+        long long max=*max_element(position.begin(), position.end());
+        long long right=max;
+        long long ans=-1;
+        while(left<=right)
+        {
+            int mid=left+(right-left)/2;
+            if(isPossibleSol(position,m,mid))
+            {
+                ans=mid;
+                left=mid+1;
+            }
+            else
+            {
+                right=mid-1;
             }
         }
         return ans;
