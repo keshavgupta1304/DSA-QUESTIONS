@@ -1,24 +1,27 @@
 class Solution {
 public:
     vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+        int maxElement = *max_element(arr1.begin(), arr1.end());
+        vector<int> count(maxElement + 1);
+
+        // Count occurrences of each element
+        for (int element : arr1) {
+            count[element]++;
+        }
+
         vector<int> result;
-        for(int i=0;i<arr2.size();i++)
-        {
-            for(int j=0;j<arr1.size();j++)
-            {
-                if(arr1[j]==arr2[i])
-                {
-                    result.push_back(arr1[j]);
-                    arr1[j]=-1;
-                }
+        // Add elements as per relative order
+        for (int element : arr2) {
+            while (count[element] > 0) {
+                result.push_back(element);
+                count[element]--;
             }
         }
-        sort(arr1.begin(),arr1.end());
-        for(int i=0;i<arr1.size();i++)
-        {
-            if(arr1[i]!=-1)
-            {
-                result.push_back(arr1[i]);
+        // Add remaining elements in ascending order
+        for (int num = 0; num <= maxElement; num++) {
+            while (count[num] > 0) {
+                result.push_back(num);
+                count[num]--;
             }
         }
         return result;
