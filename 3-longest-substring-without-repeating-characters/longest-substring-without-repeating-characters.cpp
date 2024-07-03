@@ -1,27 +1,22 @@
 class Solution {
 public:
-    int lengthOfLongestSubstring(string& s) {
-        unordered_set<char> chars; // to store characters in the current window
-        int maxSize = 0; // to store the maximum length of substring without repeating characters
-        int left = 0, right = 0; // pointers for the sliding window
-        
-        // sliding window approach
-        while (right < s.size()) {
-            // if the current character at s[right] is already in the set
-            while (chars.find(s[right]) != chars.end()) {
-                // remove characters from the set and move the left pointer to the right
-                chars.erase(s[left]);
-                ++left;
+    int lengthOfLongestSubstring(string s) {
+        unordered_map<char,int> freq_count;
+        int left=0;
+        int right=0;
+        int ans=0;
+        while(right<s.size())
+        {
+            freq_count[s[right]]++;
+
+            while(freq_count[s[right]]>1)
+            {
+                freq_count[s[left]]--;
+                left++;
             }
-            
-            // update the maximum length found so far
-            maxSize = max(maxSize, right - left + 1);
-            
-            // add the current character to the set and move the right pointer to the right
-            chars.insert(s[right]);
-            ++right;
+            ans=max(ans,right-left+1);
+            right++;
         }
-        
-        return maxSize;
+        return ans;
     }
 };
