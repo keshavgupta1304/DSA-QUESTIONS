@@ -1,18 +1,17 @@
 class Solution {
 public:
     int minOperations(vector<string>& logs) {
-        int ans = 0;
-        for(auto& operation:logs)
-        {
-           if(operation=="../")
-           {
-                if(ans>0) ans--;
-           }
-           else if(operation!="./")
-           {
-                ans++;
-           }  
+        int n = 0;
+        for (int i = 0; i < logs.size(); i++) {
+            if (logs[i] == "../") {
+               if(n>0) n--;
+            } else if (logs[i] == "./") {
+                continue;
+            } else {
+                n++;
+            }
         }
-        return ans;
+        if(n<0) return 0;
+        return n;
     }
 };
