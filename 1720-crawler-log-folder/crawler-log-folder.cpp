@@ -4,22 +4,14 @@ public:
         int ans = 0;
         for(auto& operation:logs)
         {
-           if(operation=="../" && ans!=0)
+           if(operation=="../")
            {
-                ans=ans-1;
+                if(ans>0) ans--;
            }
-           else if(operation=="../" && ans==0)
+           else if(operation!="./")
            {
-                ans=ans+0;
-           }
-           else if(operation=="./")
-           {
-                ans=ans+0;
-           }
-           else
-           {
-                ans=ans+1;
-           }
+                ans++;
+           }  
         }
         return ans;
     }
