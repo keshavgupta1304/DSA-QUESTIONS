@@ -10,8 +10,7 @@ private:
         //exclude
         solve(nums,output,ans,index+1);
         //include
-        int element=nums[index];
-        output.push_back(element);
+        output.push_back(nums[index]);
         solve(nums,output,ans,index+1);
     }
 public:
