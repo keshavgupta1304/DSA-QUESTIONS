@@ -1,72 +1,70 @@
 class Solution {
 public:
     string countOfAtoms(string formula) {
-        int n = formula.length();
-        unordered_map<string, int> result_counter;
-        stack<unordered_map<string, int>> parenthesis_stack;
-        int cur_ind = 0;
-
-        while (cur_ind < n) {
-            char cur_char = formula[cur_ind];
-
-            if (cur_char == '(') {
-                cur_ind++;
-                parenthesis_stack.push(unordered_map<string, int>());
-                continue;
+        stack<unordered_map<string, int>> finalCount;
+        finalCount.push(unordered_map<string, int>());
+        int index=0;
+        while(index<formula.size())
+        {
+            if(formula[index]=='(')
+            {
+                finalCount.push(unordered_map<string, int>());
+                index++;
             }
-
-            if (cur_char == ')') {
-                string mult_str = "";
-                cur_ind++;
-
-                while (cur_ind < n && isdigit(formula[cur_ind])) {
-                    mult_str += formula[cur_ind];
-                    cur_ind++;
+            else if(formula[index]==')')
+            {
+                unordered_map<string,int> currParenthesis=finalCount.top();
+                finalCount.pop();
+                index++;
+                string multiplier;
+                while(index<formula.size() && isdigit(formula[index]))
+                {
+                    multiplier+=formula[index];
+                    index++;
                 }
-
-                int mult = mult_str.empty() ? 1 : stoi(mult_str);
-                unordered_map<string, int> last_counter = parenthesis_stack.top();
-                parenthesis_stack.pop();
-                unordered_map<string, int>& target = parenthesis_stack.empty() ? result_counter : parenthesis_stack.top();
-                
-                for (const auto& [elem, counter] : last_counter) {
-                    target[elem] += counter * mult;
-                }
-                continue;
-            }
-
-            string cur_elem = "";
-            string cur_counter_str = "";
-            unordered_map<string, int>& target = parenthesis_stack.empty() ? result_counter : parenthesis_stack.top();
-
-            while (cur_ind < n && formula[cur_ind] != '(' && formula[cur_ind] != ')') {
-                if (isalpha(formula[cur_ind])) {
-                    if (isupper(formula[cur_ind]) && !cur_elem.empty()) {
-                        target[cur_elem] += cur_counter_str.empty() ? 1 : stoi(cur_counter_str);
-                        cur_elem = "";
-                        cur_counter_str = "";
+                if(!multiplier.empty())
+                {
+                    int mult=stoi(multiplier);
+                    for(auto& [atom,count]:currParenthesis)
+                    {
+                        currParenthesis[atom]=count*mult;
                     }
-                    cur_elem += formula[cur_ind];
-                } else {
-                    cur_counter_str += formula[cur_ind];
                 }
-                cur_ind++;
+                for(auto& [atom,count]:currParenthesis)
+                {
+                    finalCount.top()[atom]+=count;
+                }
             }
-
-            target[cur_elem] += cur_counter_str.empty() ? 1 : stoi(cur_counter_str);
+            else
+            {
+                string currAtom;
+                string currCount;
+                currAtom+=formula[index];
+                index++;
+                while(index<formula.length() && islower(formula[index]))
+                {
+                    currAtom+=formula[index];
+                    index++;
+                }
+                while(index<formula.length() && isdigit(formula[index]))
+                {
+                    currCount+=formula[index];
+                    index++;
+                }
+                int count=currCount.empty()?1:stoi(currCount);
+                finalCount.top()[currAtom]+=count;
+            }
         }
-
-        vector<string> parts;
-        for (const auto& [elem, counter] : result_counter) {
-            parts.push_back(elem + (counter == 1 ? "" : to_string(counter)));
-        }
-        sort(parts.begin(), parts.end());
-
+        map<string, int> final(finalCount.top().begin(),finalCount.top().end());
         string result;
-        for (const auto& part : parts) {
-            result += part;
+        for(auto& [atom,count]:final)
+        {
+            result+=atom;
+            if(count>1)
+            {
+                result+=to_string(count);
+            }
         }
-
         return result;
     }
 };
