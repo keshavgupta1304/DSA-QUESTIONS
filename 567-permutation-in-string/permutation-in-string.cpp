@@ -1,44 +1,40 @@
 class Solution {
 public:
-    bool checkInclusion(std::string s1, std::string s2) {
-        if(s2.size()<s1.size())
-        {
-            return false;
-        }
-        unordered_map<char,int> freq_s1;
-        unordered_map<char,int> freq_s2;
-        for(int i=0;i<s1.length();i++)
-        {
-            freq_s1[s1[i]]++;
-            freq_s2[s2[i]]++;
-        }
+    bool checkInclusion(string s1, string s2) {
+        int n=s1.length();
+        int m=s2.length();
 
-        if(freq_s1 == freq_s2)
+        if(n>m) return false;
+
+        unordered_map<char,int> f_s1;
+        unordered_map<char,int> f_s2;
+        for(int i=0;i<n;i++)
+        {
+            f_s1[s1[i]]++;
+            f_s2[s2[i]]++;
+        }
+        if(f_s1==f_s2)
         {
             return true;
         }
-
-        for(int i=s1.length();i<s2.length();i++)
+        for(int i=n;i<m;i++)
         {
-            char ch_out=s2[i-s1.length()];
-            if(freq_s2[ch_out] == 1)
+            char chOut=s2[i-n];
+            if(f_s2[chOut]==1)
             {
-                freq_s2.erase(ch_out);
+                f_s2.erase(chOut);
             }
             else
             {
-                freq_s2[ch_out]--;
+                f_s2[chOut]--;
             }
-
-            char ch_in=s2[i];
-            freq_s2[ch_in]++;
-
-            if(freq_s1 == freq_s2)
-            {
-                return true;
-            }
-
+            
+            char chToInsert=s2[i];
+            f_s2[chToInsert]++;
+            if(f_s2==f_s1) return true;
         }
         return false;
+
+
     }
 };
