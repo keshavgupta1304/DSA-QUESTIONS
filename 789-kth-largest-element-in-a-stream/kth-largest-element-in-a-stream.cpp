@@ -22,16 +22,23 @@ public:
         } 
         return arr[arr.size()-k];
     }
-    int getIndex(int value)
+    int getIndex(int val)
     {
-        for(int i=0;i<arr.size();i++)
-        {
-            if(value<=arr[i])
-            {
-                return i;
+        int left = 0;
+        int right = arr.size() - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            int midValue = arr[mid];
+            if (midValue == val) return mid;
+            if (midValue > val) {
+                // Go to left half
+                right = mid - 1;
+            } else {
+                // Go to right half
+                left = mid + 1;
             }
         }
-        return arr.size();
+        return left;
     }
 };
 
