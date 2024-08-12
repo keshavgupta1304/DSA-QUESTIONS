@@ -12,14 +12,7 @@ public:
     }
     int add(int val) {
         int insertIndex=getIndex(val);
-        if(insertIndex>=arr.size())
-        {
-            arr.push_back(val);
-        } 
-        else
-        {
-            arr.insert(arr.begin()+insertIndex,val);
-        } 
+        arr.insert(arr.begin()+insertIndex,val);
         return arr[arr.size()-k];
     }
     int getIndex(int val)
