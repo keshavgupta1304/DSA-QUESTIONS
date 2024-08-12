@@ -1,42 +1,26 @@
 class KthLargest {
-public:
+private:
+    priority_queue<int, vector<int>, greater<int>> minHeap;
     int k;
-    vector<int> arr;
+
+public:
     KthLargest(int k, vector<int>& nums) {
-        this->k=k;
-        for(int num:nums)
-        {
-            arr.push_back(num);
+        this->k = k;
+
+        for (int num : nums) {
+            add(num);
         }
-        sort(arr.begin(),arr.end());
     }
+
     int add(int val) {
-        int insertIndex=getIndex(val);
-        arr.insert(arr.begin()+insertIndex,val);
-        return arr[arr.size()-k];
-    }
-    int getIndex(int val)
-    {
-        int left = 0;
-        int right = arr.size() - 1;
-        while (left <= right) {
-            int mid = (left + right) / 2;
-            int midValue = arr[mid];
-            if (midValue == val) return mid;
-            if (midValue > val) {
-                // Go to left half
-                right = mid - 1;
-            } else {
-                // Go to right half
-                left = mid + 1;
+        // Add to our minHeap if we haven't processed k elements yet
+        // or if val is greater than the top element (the k-th largest)
+        if (minHeap.size() < k || minHeap.top() < val) {
+            minHeap.push(val);
+            if (minHeap.size() > k) {
+                minHeap.pop();
             }
         }
-        return left;
+        return minHeap.top();
     }
 };
-
-/**
- * Your KthLargest object will be instantiated and called as such:
- * KthLargest* obj = new KthLargest(k, nums);
- * int param_1 = obj->add(val);
- */
