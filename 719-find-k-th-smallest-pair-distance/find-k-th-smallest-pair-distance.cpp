@@ -1,35 +1,31 @@
 class Solution {
+private:
+    int findPairsOfMaxDistanceMid(vector<int>& nums,int maxDistance)
+    {
+        int left=0;
+        int ans=0;
+        for(int right=0;right<nums.size();right++)
+        {
+            while(nums[right]-nums[left]>maxDistance)
+            {
+                left++;
+            }
+            ans+=right-left;
+        }
+        return ans;
+    }
 public:
     int smallestDistancePair(vector<int>& nums, int k) {
-        int arraySize = nums.size();
-
-        // Find the maximum element in the array
-        int maxElement = *max_element(nums.begin(), nums.end());
-
-        // Initialize a bucket array to store counts of each distance
-        vector<int> distanceBucket(maxElement + 1, 0);
-
-        // Populate the bucket array with counts of each distance
-        for (int i = 0; i < arraySize; ++i) {
-            for (int j = i + 1; j < arraySize; ++j) {
-                // Compute the distance between nums[i] and nums[j]
-                int distance = abs(nums[i] - nums[j]);
-
-                // Increment the count for this distance in the bucket
-                ++distanceBucket[distance];
-            }
+        sort(nums.begin(),nums.end());
+        int low=0;
+        int high=nums[nums.size()-1]-nums[0];
+        while(low<high)
+        {
+            int mid=low+(high-low)/2;
+            int countPairs=findPairsOfMaxDistanceMid(nums,mid);
+            if(countPairs<k) low=mid+1;
+            else high=mid;
         }
-
-        // Find the k-th smallest distance
-        for (int dist = 0; dist <= maxElement; ++dist) {
-            // Reduce k by the number of pairs with the current distance
-            k -= distanceBucket[dist];
-
-            // If k is less than or equal to 0, return the current distance
-            if (k <= 0) {
-                return dist;
-            }
-        }
-        return -1;  // Return -1 if no distance found, should not reach here
+        return low;
     }
 };
