@@ -20,12 +20,10 @@ public:
                 {
                     mp[5]--;
                     mp[10]--;
-                    mp[20]++;
                 }
                 else if(mp[5]>=3)
                 {
                     mp[5]-=3;
-                    mp[20]++;
                 }
                 else return false;
             }
