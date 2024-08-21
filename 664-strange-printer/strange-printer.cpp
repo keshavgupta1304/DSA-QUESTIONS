@@ -1,34 +1,31 @@
 class Solution {
 public:
     int strangePrinter(string s) {
-        s = removeDuplicate(s);
-
-        int n = s.length();
-
-        vector<vector<int>> memo(n,vector<int>(n,-1));
-        return solve(0,n-1,s,memo);
-    
-    }
-    int solve(int start,int end,string& s,vector<vector<int>>& memo)
-    {
-        if(start>end) return 0;
-        if(memo[start][end]!=-1)
+        s = removeDupli(s);
+        int n=s.length();
+        vector<vector<int>> dp(n,vector<int>(n,0));
+        for(int i=0;i<n;i++)
         {
-            return memo[start][end];
+            dp[i][i]=1;
         }
-        int minimumTurns=1+solve(start+1,end,s,memo);
-        for(int i=start+1;i<=end;i++)
+        for(int length=2;length<=n;length++)
         {
-            if(s[i]==s[start])
+            for(int start=0;start<=n-length;start++)
             {
-                int sol=solve(start,i-1,s,memo)+solve(i+1,end,s,memo);
-                minimumTurns=min(minimumTurns,sol);
+                int end=start+length-1;
+                dp[start][end] = length;
+                
+                for(int split=0;split<length-1;split++)
+                {
+                    int totalOperations = dp[start][start+split] + dp[start+split+1][end];
+                    if(s[start+split]==s[end]) totalOperations--;
+                    dp[start][end]=min(dp[start][end],totalOperations);
+                }
             }
         }
-        memo[start][end]=minimumTurns;
-        return minimumTurns;
+        return dp[0][n-1];
     }
-    string removeDuplicate(string s)
+    string removeDupli(string s)
     {
         string ans;
         int i=0;
