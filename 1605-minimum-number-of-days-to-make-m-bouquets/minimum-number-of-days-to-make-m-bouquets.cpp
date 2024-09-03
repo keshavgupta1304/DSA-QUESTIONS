@@ -1,50 +1,50 @@
 class Solution {
-public:
-
-    bool isPossibleSol(vector<int>& bloomDay, int m, int k,int mid)
+private:
+    bool isValid(vector<int>& bloomDay,int mid, int m, int k)
     {
+        //mid is no of Days here.m is required bouqets,k is adjacent flowers
+        int cntAdjacent=0;
         int noOfBouqets=0;
-        int noOfFlowers=0;
         for(int i=0;i<bloomDay.size();i++)
         {
-            if(bloomDay[i]<=mid)
+            if(bloomDay[i]<=mid)//bloomedFlowers
             {
-                noOfFlowers++;
+                cntAdjacent+=1;
+                if(cntAdjacent==k)
+                {
+                    noOfBouqets+=1;
+                    cntAdjacent=0;
+                }
             }
             else
             {
-                noOfFlowers=0;
-            }
-            if(noOfFlowers == k)
-            {
-                noOfBouqets++;
-                noOfFlowers=0;
+                cntAdjacent=0;
             }
         }
         return noOfBouqets>=m;
     }
-
+public:
     int minDays(vector<int>& bloomDay, int m, int k) {
-        if((long long)m*k > bloomDay.size())
+        int n=bloomDay.size();
+        if(n<(long long)m*k)
         {
             return -1;
         }
-        long long left=0;
-        long long right=INT_MAX;
-        long long minNoOfDays=-1;
-        while(left<=right)
+        int low=1;
+        int high=*max_element(bloomDay.begin(),bloomDay.end());
+        int ans=INT_MAX;
+        while(low<=high)
         {
-            long long mid=left+(right-left)/2;
-            if(isPossibleSol(bloomDay,m,k,mid))
+            int mid=low+(high-low)/2;
+            if(isValid(bloomDay,mid,m,k))
             {
-                minNoOfDays=mid;
-                right=mid-1;
+                ans=min(mid,ans);
+                high=mid-1;
             }
-            else
-            {
-                left=mid+1;
+            else{
+                low=mid+1;
             }
         }
-        return (int)minNoOfDays;
+        return ans;
     }
 };
