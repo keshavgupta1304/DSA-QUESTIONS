@@ -1,38 +1,32 @@
 class Solution {
 public:
-
-    bool isPossibleSol(vector<int>& piles, int h,int mid)
-    {
-        double noOfHours=0;
-        int noOfBananas=mid;
-        for(int i=0;i<piles.size();i++)
-        {
-            noOfHours+=ceil((double)piles[i]/mid);
-            if(noOfHours>h)
-            {
-                return false;
-            }
-        }
-        return noOfHours<=h;
-    }
-
     int minEatingSpeed(vector<int>& piles, int h) {
-        int left=0;
-        int right=*max_element(piles.begin(),piles.end());
-        int ans=0;
-        while(left<=right)
+        int low=1;
+        int high=*max_element(piles.begin(),piles.end());
+        if(piles.size()==h) return high;
+        int k = INT_MAX;
+        while(low<=high)
         {
-            int mid=left+(right-left)/2;
-            if(isPossibleSol(piles,h,mid))
+            int mid = low + (high-low)/2;//banana-per-hour
+            if(checkValid(mid,piles,h))
             {
-                ans=mid;
-                right=mid-1;
+                k=min(k,mid);
+                high=mid-1;
             }
-            else
-            {
-                left=mid+1;
+            else{
+                low=mid+1;
             }
         }
-        return ans;
+        return k;
+    }
+    bool checkValid(int mid,vector<int>& piles,int h)
+    {
+        long long noOfHours=0;
+        for(auto bananas:piles)
+        {
+            if(bananas%mid==0) noOfHours+=bananas/mid;
+            else noOfHours+=(bananas/mid)+1;
+        }
+        return noOfHours<=h?true:false;
     }
 };
