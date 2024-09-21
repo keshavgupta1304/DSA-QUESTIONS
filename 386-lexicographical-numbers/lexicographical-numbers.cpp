@@ -1,19 +1,25 @@
 class Solution {
 public:
     vector<int> lexicalOrder(int n) {
-        vector<int> ans;
-        vector<string> ordering;
-        for(int i=1;i<=n;i++)
-        {
-            ordering.push_back(to_string(i));
+        vector<int> lexicographicalNumbers;
+        for (int start = 1; start <= 9; ++start) {
+            generateLexicalNumbers(start, n, lexicographicalNumbers);
         }
-        sort(ordering.begin(),ordering.end(),[&](const string&a,const string&b){
-            return a<b;
-        });
-        for(auto stringNum:ordering)
-        {
-            ans.push_back(stoi(stringNum));
+        return lexicographicalNumbers;
+    }
+
+private:
+    void generateLexicalNumbers(int currentNumber, int limit,
+                                vector<int>& result) {
+        if (currentNumber > limit) return;
+        result.push_back(currentNumber);
+        for (int nextDigit = 0; nextDigit <= 9; ++nextDigit) {
+            int nextNumber = currentNumber * 10 + nextDigit;
+            if (nextNumber <= limit) {
+                generateLexicalNumbers(nextNumber, limit, result);
+            } else {
+                break; 
+            }
         }
-        return ans;
     }
 };
