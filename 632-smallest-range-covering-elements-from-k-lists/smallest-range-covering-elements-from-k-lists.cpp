@@ -1,36 +1,33 @@
 class Solution {
 public:
     vector<int> smallestRange(vector<vector<int>>& nums) {
+        //priority queue to store the smallest number 
+        //and its list index with the element index
+        priority_queue<pair<int,pair<int,int>>,vector<pair<int,pair<int,int>>>,
+        greater<>> minHeap;
         int k=nums.size();
-        vector<int> indicesOfLists(k,0);
+        int curMax=INT_MIN;
         vector<int> range={0,INT_MAX};
-        while(true)
+        for(int i=0;i<k;i++)
         {
-            int curMin=INT_MAX;
-            int curMax=INT_MIN;
-            int minNumberInListIndex=0;
-            for(int i=0;i<k;i++)
-            {
-                int currEle=nums[i][indicesOfLists[i]];
-                if(currEle<curMin)
-                {
-                    curMin=currEle;
-                    minNumberInListIndex=i;
-                }
-                if(currEle>curMax)
-                {
-                    curMax=currEle;
-                }
-            }
-            if((curMax-curMin) < (range[1]-range[0]))
+            minHeap.push({nums[i][0],{i,0}});
+            curMax=max(curMax,nums[i][0]);
+        }
+        while(minHeap.size()==k)
+        {
+            auto [curMin,indices] = minHeap.top();
+            minHeap.pop();
+            int minListIndex=indices.first;
+            int minNumberIndex=indices.second;
+            if((curMax-curMin)<(range[1]-range[0]))
             {
                 range[0]=curMin;
                 range[1]=curMax;
             }
-            indicesOfLists[minNumberInListIndex]++;
-            if(indicesOfLists[minNumberInListIndex]==nums[minNumberInListIndex].size())
+            if(minNumberIndex+1<nums[minListIndex].size())
             {
-                break;
+                minHeap.push({nums[minListIndex][minNumberIndex+1],{minListIndex,minNumberIndex+1}});
+                curMax=max(curMax,nums[minListIndex][minNumberIndex+1]);
             }
         }
         return range;
