@@ -9,45 +9,32 @@
  * };
  */
 class Solution {
-private:
-    void Reverse(vector<int>& arr, int start, int end)
-    {
-        while (start <= end)
-        {
-            int temp = arr[start];
-            arr[start] = arr[end];
-            arr[end] = temp;
-            start++;
-            end--;
-        }
-    }
-    void rotateRight(vector<int>& arr,int k,int n)
-    {
-        k=k%n;
-        if(k==0) return ;
-        Reverse(arr,0,n-k-1);
-        Reverse(arr,n-k,n-1);
-        Reverse(arr,0,n-1);
-    }
 public:
+    ListNode* findNthNode(ListNode* temp,int n)
+    {
+        n--;
+        while(temp && n)
+        {
+            temp=temp->next;
+            n--;
+        }
+        return temp;
+    }
     ListNode* rotateRight(ListNode* head, int k) {
-        vector<int> arr;
-        ListNode* temp=head;
-        while(temp)
+        if(head==nullptr || k==0) return head;
+        int len=1;
+        ListNode* tail=head;
+        while(tail->next)
         {
-            arr.push_back(temp->val);
-            temp=temp->next;
+            len++;
+            tail=tail->next;
         }
-        int n=arr.size();
-        if(n==0) return nullptr;
-        rotateRight(arr,k,n);
-        temp=head;
-        int i=0;
-        while(temp)
-        {
-            temp->val=arr[i++];
-            temp=temp->next;
-        }
+        if(k%len==0) return head;
+        k=k%len;
+        tail->next=head;
+        ListNode* newLastNode=findNthNode(head,len-k);
+        head=newLastNode->next;
+        newLastNode->next=nullptr;
         return head;
     }
 };
