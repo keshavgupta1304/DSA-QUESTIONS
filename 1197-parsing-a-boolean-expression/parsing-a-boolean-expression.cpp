@@ -1,26 +1,40 @@
 class Solution {
 public:
     bool parseBoolExpr(string expression) {
-        while (expression.length() > 1) {
-            int start = expression.find_last_of("!&|");
-            int end = expression.find(')', start);
-            string subExpr = expression.substr(start, end - start + 1);
-            char result = evaluateSubExpr(subExpr);
-            expression.replace(start, end - start + 1, 1, result);
+        stack<char> st;
+        for (char currChar : expression) {
+            if (currChar == ')') {
+                vector<char> values;
+                while (st.top() != '(') {
+                    values.push_back(st.top());
+                    st.pop();
+                }
+                st.pop();
+                char op = st.top();
+                st.pop();
+                char result = evaluateSubExpr(op, values);
+                st.push(result);
+            } else if (currChar != ',') {
+                st.push(currChar);
+            }
         }
-        return expression[0] == 't';
+        return st.top() == 't';
     }
-
 private:
-    char evaluateSubExpr(const string& subExpr) {
-        char op = subExpr[0];
-        string values = subExpr.substr(2, subExpr.length() - 3);
-        if (op == '!')
-            return values[0] == 't' ? 'f' : 't';
-        if (op == '&')
-            return values.find('f') != string::npos ? 'f' : 't';
-        if (op == '|')
-            return values.find('t') != string::npos ? 't' : 'f';
-        return 'f';
+    char evaluateSubExpr(char op, vector<char>& values) {
+        if (op == '!') return values[0] == 't' ? 'f' : 't';
+        if (op == '&') {
+            for (char value : values) {
+                if (value == 'f') return 'f';
+            }
+            return 't';
+        }
+        if (op == '|') {
+            for (char value : values) {
+                if (value == 't') return 't';
+            }
+            return 'f';
+        }
+        return 'f';  
     }
 };
