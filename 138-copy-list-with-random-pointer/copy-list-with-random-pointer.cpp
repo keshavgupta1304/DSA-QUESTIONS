@@ -28,7 +28,6 @@ public:
             temp=temp->next;
         }
         temp=head;
-        Node* result=mp[temp];
         while(temp)
         {
             Node* newNode=mp[temp];
@@ -36,7 +35,7 @@ public:
             newNode->random=mp[temp->random];
             temp=temp->next;
         }
-        return result;
+        return mp[head];
         
     }
 };
