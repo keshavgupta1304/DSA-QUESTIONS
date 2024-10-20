@@ -19,23 +19,30 @@ public:
     Node* copyRandomList(Node* head) {
         if(!head) return head;
         Node* temp=head;
-        unordered_map<Node*,Node*> mp;
-        mp.insert({nullptr,nullptr});
         while(temp)
         {
-            Node* newNode=new Node(temp->val);
-            mp.insert({temp,newNode});
-            temp=temp->next;
+            Node* copyNode=new Node(temp->val);
+            copyNode->next=temp->next;
+            temp->next=copyNode;
+            temp=temp->next->next;
         }
         temp=head;
         while(temp)
         {
-            Node* newNode=mp[temp];
-            newNode->next=mp[temp->next];
-            newNode->random=mp[temp->random];
-            temp=temp->next;
+            Node* copyNode=temp->next;
+            copyNode->random=(temp->random)?temp->random->next:nullptr;
+            temp=temp->next->next;
         }
-        return mp[head];
-        
+        Node* dummy=new Node(-1);
+        Node* mover=dummy;
+        temp=head;
+        while(temp)
+        {
+            mover->next=temp->next;
+            temp->next=temp->next->next;
+            mover=mover->next;
+            temp=temp?temp->next:nullptr;
+        }
+        return dummy->next;
     }
 };
