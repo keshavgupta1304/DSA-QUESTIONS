@@ -4,11 +4,8 @@ public:
         int n=s.length();
         int m=goal.length();
         if(n!=m) return false;
-        string to_check=s+s;
-        if(to_check.find(goal)==string::npos)
-        {
-            return false;
-        }
-        return true;
+        string check=s+s;
+        if(check.find(goal)!=string::npos) return true;
+        return false;
     }
 };
