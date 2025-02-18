@@ -11,7 +11,7 @@ public:
             {
                 while(!stk.empty())
                 {
-                    result+=to_string(stk.top());
+                    result+=(stk.top()+'0');
                     stk.pop();
                 }
             }
