@@ -1,21 +1,91 @@
 class Solution {
-public:
-    long long subArrayRanges(vector<int>& nums) {
-        int n=nums.size();
-        if(n==1) return 0;
-        long long ans=0;
-        long long windowMin;
-        long long windowMax; 
+private:
+    void findNge(vector<int>& nge,vector<int> arr)
+    {
+        stack<int> indices;
+        for(int i=arr.size()-1;i>=0;i--)
+        {
+            while(!indices.empty() && arr[i]>=arr[indices.top()])
+            {
+                indices.pop();
+            }
+            if(!indices.empty()) nge[i]=indices.top();
+            indices.push(i);
+        }
+    }
+    void findPgee(vector<int>& pgee,vector<int> arr)
+    {
+        stack<int> indices;
+        for(int i=0;i<arr.size();i++)
+        {
+            while(!indices.empty() && arr[i]>arr[indices.top()])
+            {
+                indices.pop();
+            }
+            if(!indices.empty()) pgee[i]=indices.top();
+            indices.push(i);
+        }
+    }
+    long long sumSubarrayMax(vector<int> arr)
+    {
+        long long total=0;
+        int n=arr.size();
+        vector<int> nge(n,n);
+        vector<int> pgee(n,-1);
+        findNge(nge,arr);
+        findPgee(pgee,arr);
         for(int i=0;i<n;i++)
         {
-            windowMin=windowMax=nums[i];
-            for(int j=i;j<n;j++)
-            {
-                windowMin=min(windowMin,(long long)nums[j]);
-                windowMax=max(windowMax,(long long)nums[j]);
-                ans+=windowMax-windowMin;
-            }
+            int left=i-pgee[i];
+            int right=nge[i]-i;
+            total=(total+(right*left*1LL*arr[i]));
         }
-        return ans;
+        return total;
+    }
+    void findNse(vector<int>& nse,vector<int> arr)
+    {
+        stack<int> indices;
+        for(int i=arr.size()-1;i>=0;i--)
+        {
+            while(!indices.empty() && arr[i]<=arr[indices.top()])
+            {
+                indices.pop();
+            }
+            if(!indices.empty()) nse[i]=indices.top();
+            indices.push(i);
+        }
+    }
+    void findPsee(vector<int>& psee,vector<int> arr)
+    {
+        stack<int> indices;
+        for(int i=0;i<arr.size();i++)
+        {
+            while(!indices.empty() && arr[i]<arr[indices.top()])
+            {
+                indices.pop();
+            }
+            if(!indices.empty()) psee[i]=indices.top();
+            indices.push(i);
+        }
+    }
+    long long sumSubarrayMin(vector<int> arr)
+    {
+        long long total=0;
+        int n=arr.size();
+        vector<int> nse(n,n);
+        vector<int> psee(n,-1);
+        findNse(nse,arr);
+        findPsee(psee,arr);
+        for(int i=0;i<n;i++)
+        {
+            int left=i-psee[i];
+            int right=nse[i]-i;
+            total=(total+(right*left*1LL*arr[i]));
+        }
+        return total;
+    }
+public:
+    long long subArrayRanges(vector<int>& nums) {
+        return sumSubarrayMax(nums)-sumSubarrayMin(nums);
     }
 };
