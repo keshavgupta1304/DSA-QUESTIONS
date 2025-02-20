@@ -1,6 +1,6 @@
 class Solution {
 private:
-    bool recur(string& result,int n,set<string> binaryStr,int index)
+    bool recur(string& result,int n,unordered_set<string> binaryStr,int index)
     {
         if(index>=n)
         {
@@ -22,7 +22,7 @@ public:
     string findDifferentBinaryString(vector<string>& nums) {
         string result="";
         int n=nums.size();
-        set<string> binaryStr(nums.begin(),nums.end());
+        unordered_set<string> binaryStr(nums.begin(),nums.end());
         recur(result,n,binaryStr,0);
         return result;
     }
