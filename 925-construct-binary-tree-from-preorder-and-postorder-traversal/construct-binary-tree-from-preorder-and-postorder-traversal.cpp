@@ -11,26 +11,26 @@
  */
 class Solution {
 private:
-    TreeNode* recur(int preStart,int preEnd,int postStart,const vector<int> preorder, const vector<int> postorder)
+    TreeNode* recur(int preStart,int preEnd,int postStart,const vector<int> preorder, const vector<int> index)
     {
         if(preStart>preEnd) return nullptr;
         if(preStart==preEnd) return new TreeNode(preorder[preStart]);
         TreeNode* root=new TreeNode(preorder[preStart]);
         int leftRoot=preorder[preStart+1];
-        int numNodesInLeft=0;
-        while(postorder[postStart+numNodesInLeft]!=leftRoot)
-        {
-            numNodesInLeft++;
-        }
-        root->left=recur(preStart+1,preStart+numNodesInLeft+1,postStart,preorder,postorder);
-        root->right=recur(preStart+numNodesInLeft+2,preEnd,postStart+numNodesInLeft+1,preorder,postorder);
+        int numNodesInLeft=index[leftRoot]-postStart;
+        root->left=recur(preStart+1,preStart+numNodesInLeft+1,postStart,preorder,index);
+        root->right=recur(preStart+numNodesInLeft+2,preEnd,postStart+numNodesInLeft+1,preorder,index);
         return root;
 
     }
 public:
     TreeNode* constructFromPrePost(vector<int>& preorder, vector<int>& postorder) {
         int numNodes=preorder.size();
-        return recur(0,numNodes-1,0,preorder,postorder);
+        vector<int> index(numNodes + 1);
+        for (int i = 0; i < numNodes; i++) {
+            index[postorder[i]] = i;
+        }
+        return recur(0,numNodes-1,0,preorder,index);
     }
 
 };
