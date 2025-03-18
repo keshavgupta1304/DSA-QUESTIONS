@@ -1,28 +1,25 @@
 class Solution {
+private:
+    int noOfSubarraysAtMostKOdd(vector<int>& nums, int k)
+    {
+        int left=0;
+        int n=nums.size();
+        int niceSub=0;
+        int oddCount=0;
+        for(int right=0;right<n;right++)
+        {
+            if(nums[right]&1) oddCount++;
+            while(left<=right && oddCount>k)
+            {
+                if(nums[left]&1) oddCount--;
+                left++;
+            }
+            niceSub+=right-left+1;
+        }
+        return niceSub;
+    }
 public:
     int numberOfSubarrays(vector<int>& nums, int k) {
-        unordered_map<int, int> prefix_count;
-        prefix_count[0] = 1;
-        int prefix_sum = 0;
-        int result = 0;
-        for (int num : nums) {
-            // Increment prefix sum by 1 if the number is odd
-            if (num & 1) {
-                prefix_sum += 1;
-            }
-            
-            // Check if there exists a prefix sum that, when subtracted from current prefix sum, equals k
-            if (prefix_count.find(prefix_sum - k) != prefix_count.end()) {
-                result += prefix_count[prefix_sum - k];
-            }
-            
-            // Update the count of the current prefix sum 
-            if (prefix_count.find(prefix_sum) != prefix_count.end()) {
-                prefix_count[prefix_sum] += 1;
-            } else {
-                prefix_count[prefix_sum] = 1;
-            }
-        }
-        return result;
+        return noOfSubarraysAtMostKOdd(nums,k)-noOfSubarraysAtMostKOdd(nums,k-1);
     }
 };
