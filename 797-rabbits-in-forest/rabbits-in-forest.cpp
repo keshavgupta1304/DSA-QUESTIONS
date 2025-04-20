@@ -1,18 +1,18 @@
 class Solution {
 public:
     int numRabbits(vector<int>& answers) {
-        unordered_map<int, int> freq;
-        for (int a : answers) {
-            freq[a]++;
+        sort(answers.begin(), answers.end());
+        int res = 0, count = 0;
+        for (int i = 0; i < answers.size(); ++i) {
+            if (answers[i] == 0) {
+                res++;
+            } else if (i == 0 || answers[i] != answers[i - 1] || count == 0) {
+                res += answers[i] + 1;
+                count = answers[i];
+            } else {
+                count--;
+            }
         }
-
-        int count = 0;
-        for (auto& [k, v] : freq) {
-            int groupSize = k + 1;
-            int groups = (v + k) / groupSize;
-            count += groups * groupSize;
-        }
-
-        return count;
+        return res;
     }
 };
