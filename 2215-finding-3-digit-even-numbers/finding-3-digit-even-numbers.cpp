@@ -13,11 +13,16 @@ public:
             int hundreds=num/100;
             int tens=(num/10)%10;
             int ones=num%10;
-            unordered_map<int,int> tempMap=mp;
-            if(tempMap[hundreds]-- > 0 && tempMap[tens]-- > 0 && tempMap[ones]-- > 0)
+            mp[hundreds]--;
+            mp[tens]--;
+            mp[ones]--;
+            if(mp[hundreds] >= 0 && mp[tens] >= 0 && mp[ones] >= 0)
             {
                 ans.push_back(num);
             }
+            mp[hundreds]++;
+            mp[tens]++;
+            mp[ones]++;
         }
         return ans;
     }
