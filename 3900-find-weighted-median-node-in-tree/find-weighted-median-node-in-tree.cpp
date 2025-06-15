@@ -63,7 +63,7 @@ public:
         for(int k=LOG-1;k>=0;k--)
         {
             int upwardNode=up[node][k];
-            if(upwardNode!=-1 && travelledSoFar+upW[node][k] < targetDist)
+            if(upwardNode!=-1 && travelledSoFar+upW[node][k] <= targetDist)
             {
                 travelledSoFar+=upW[node][k];
                 node=upwardNode;
