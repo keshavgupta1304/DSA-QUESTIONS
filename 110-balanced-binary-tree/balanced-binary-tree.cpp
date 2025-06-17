@@ -14,18 +14,14 @@ public:
     int get_height(TreeNode* node)
     {
         if(node==nullptr) return 0;
-        return max(get_height(node->left),get_height(node->right))+1;
+        int left=get_height(node->left);
+        if(left==-1) return -1;
+        int right=get_height(node->right);
+        if(right==-1) return -1;
+        if(abs(left-right)>1) return -1;
+        return max(left,right)+1;
     }
     bool isBalanced(TreeNode* root) {
-        if(root==nullptr) return true;
-
-        int leftHeight=get_height(root->left);
-        int rightHeight=get_height(root->right);
-
-        if(abs(leftHeight-rightHeight) <= 1 && isBalanced(root->left) && isBalanced(root->right))
-        {
-            return true;
-        }
-        return false;
+        return get_height(root)!=-1;
     }
 };
