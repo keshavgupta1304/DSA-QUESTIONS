@@ -19,28 +19,17 @@ public:
         while(!q.empty())
         {
             int size=q.size();
-            vector<int> levelNodes;
+            vector<int> levelNodes(size);
             for(int i=0;i<size;i++)
             {
                 TreeNode* node=q.front();
                 q.pop();
                 if(node->left!=NULL) q.push(node->left);
                 if(node->right!=NULL) q.push(node->right);
-                levelNodes.push_back(node->val);
+                int index=isLeft?i:size-i-1;
+                levelNodes[index]=node->val;
             }
-            if(isLeft)
-            {
-                result.push_back(levelNodes);
-            }
-            else
-            {
-                vector<int> reverse;
-                for(int i=levelNodes.size()-1;i>=0;i--)
-                {
-                    reverse.push_back(levelNodes[i]);
-                }
-                result.push_back(reverse);
-            }
+            result.push_back(levelNodes);
             isLeft^=1;
         }
     }
