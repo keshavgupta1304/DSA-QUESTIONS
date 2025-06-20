@@ -24,9 +24,10 @@ public:
         q.push(root);
         int dep=depth(root);
         int l=0;
+        vector<int> level;
         while(!q.empty())
         {
-            vector<int> level;
+            level={};
             int size=q.size();
             for(int i=0;i<size;i++)
             {
