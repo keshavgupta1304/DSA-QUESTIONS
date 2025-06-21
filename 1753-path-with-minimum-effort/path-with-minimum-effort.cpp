@@ -15,7 +15,7 @@ public:
             int currEffort=ele.first;
             int currX=ele.second.first;
             int currY=ele.second.second;
-
+            if(currX==m-1 && currY==n-1) return currEffort;
             for(auto [dx,dy]:directions)
             {
                 int newX=currX+dx,newY=currY+dy;
