@@ -28,14 +28,25 @@ public:
         for(long long t=num;t>0;t/=10) ans=ans*10+(t%10);
         return ans;
     }
+    long long power(long long base,long long exponent)
+    {
+        long long result=1;
+        while(exponent>0)
+        {
+            if(exponent&1) result=result*base;
+            base=base*base;
+            exponent>>=1;
+        }
+        return result;
+    }
     long long kMirror(int k, int n) {
         int found=0;
         long long sum=0;
         for(int len=1;found<n;len++)
         {
             int halflen=(len+1)/2;
-            long long start=halflen==1?1:pow(10,halflen-1);
-            long long limit=pow(10,halflen);
+            long long start=halflen==1?1:power(10,halflen-1);
+            long long limit=power(10,halflen);
             for(long long seed=start;seed<limit && found<n;seed++)
             {
                 long long num=(len&1)?makeOddPal(seed):makeEvenPal(seed);
