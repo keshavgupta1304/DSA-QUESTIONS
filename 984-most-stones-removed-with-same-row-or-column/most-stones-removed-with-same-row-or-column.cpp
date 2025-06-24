@@ -1,41 +1,60 @@
-class Solution {
-private:
-    void dfs(vector<vector<int>>& adjacencyList,vector<bool>& visited,int i)
+class DSU{
+    vector<int> parent,size;
+    public:
+    DSU(int n)
     {
-        visited[i]=true;
-        for(auto neighbour:adjacencyList[i])
+        parent=vector<int>(n+1);
+        size=vector<int>(n+1,1);
+        for(int i=0;i<=n;i++)
         {
-            if(!visited[neighbour])
-            {
-                dfs(adjacencyList,visited,neighbour);
-            }
+            parent[i]=i;
         }
     }
+    int findUPar(int u){
+        if(u==parent[u]) return u;
+        return parent[u]=findUPar(parent[u]);
+    }
+    void unionBySize(int u,int v)
+    {
+        int ulp_u=findUPar(u);
+        int ulp_v=findUPar(v);
+        if(ulp_u==ulp_v) return;
+        if(size[ulp_u]<size[ulp_v])
+        {
+            parent[ulp_u]=ulp_v;
+            size[ulp_v]+=size[ulp_u];
+        }
+        else
+        {
+            parent[ulp_v]=ulp_u;
+            size[ulp_u]+=size[ulp_v];
+        }
+    }
+};
+
+class Solution {
 public:
     int removeStones(vector<vector<int>>& stones) {
-        int n = stones.size();
-        vector<vector<int>> adjacencyList(n);
+        int n=stones.size();
+        DSU ds(n);
         for(int i=0;i<n;i++)
         {
             for(int j=i+1;j<n;j++)
             {
                 if(stones[i][0]==stones[j][0] || stones[i][1]==stones[j][1])
                 {
-                    adjacencyList[i].push_back(j);
-                    adjacencyList[j].push_back(i);
+                    ds.unionBySize(i,j);
                 }
             }
         }
-        int noOfComponents=0;
-        vector<bool> visited(n,false);
+        int comp=0;
         for(int i=0;i<n;i++)
         {
-            if(!visited[i])
+            if(ds.findUPar(i)==i)
             {
-                dfs(adjacencyList,visited,i);
-                noOfComponents++;
+                comp++;
             }
         }
-        return n-noOfComponents;
+        return n-comp;
     }
 };
