@@ -1,14 +1,19 @@
 class Solution {
 public:
     char kthCharacter(int k) {
-        string word = "a";
-        while (word.size() < k) {
-            string add = "";
-            for (char c : word) {
-                add += (c - 'a' + 1) % 26 + 'a';
+        int len=1;
+        while(len<k) len=len*2;
+        int transformations=0;
+        while(k!=1)
+        {
+            if((len/2) < k)
+            {
+                transformations++;
+                k=k-(len/2);
             }
-            word += add;
+            len=len/2;
         }
-        return word[k - 1];
+        char result='a'+transformations%26;
+        return result;
     }
 };
