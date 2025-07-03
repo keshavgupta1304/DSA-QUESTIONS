@@ -1,19 +1,16 @@
 class Solution {
 public:
     char kthCharacter(int k) {
-        int len=1;
-        while(len<k) len=len*2;
-        int transformations=0;
-        while(k!=1)
-        {
-            if((len/2) < k)
-            {
-                transformations++;
-                k=k-(len/2);
+        int add = 0;
+        int len = 1 << (31 - __builtin_clz(k));
+        while (k != 1) {
+            if (k > len) {
+                k -= len;
+                add++;
             }
-            len=len/2;
+            len = len >> 1;
         }
-        char result='a'+transformations%26;
-        return result;
+
+        return char('a' + (add % 26));
     }
 };
