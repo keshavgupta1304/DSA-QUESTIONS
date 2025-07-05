@@ -1,14 +1,5 @@
 class Solution {
 public:
-    int recur(int i,int j,const vector<vector<int>>& triangle,vector<vector<int>>& dp)
-    {
-        if(i==0 && j==0) return triangle[i][j];
-        if(i<0 || j<0 || j>=triangle[i].size()) return 1e5;
-        if(dp[i][j]!=-1) return dp[i][j];
-        int upLeft=recur(i-1,j-1,triangle,dp);
-        int up=recur(i-1,j,triangle,dp);
-        return dp[i][j]=triangle[i][j]+min(upLeft,up);
-    }
     int minimumTotal(vector<vector<int>>& triangle) {
         int m=triangle.size();
         int n=triangle[triangle.size()-1].size();
@@ -16,10 +7,23 @@ public:
         for(int i = 0; i < m; ++i) {
             dp.push_back(vector<int>(triangle[i].size(), -1));
         }
+        dp[0][0]=triangle[0][0];
+        for(int i=1;i<triangle.size();i++)
+        {
+            for(int j=0;j<=i;j++)
+            {
+
+                int upLeft=1e5;
+                int up=1e5;
+                if(j-1>=0) upLeft=dp[i-1][j-1];
+                if(j<triangle[i-1].size()) up=dp[i-1][j];
+                dp[i][j]=min(upLeft,up) + triangle[i][j];
+            }
+        }
         int mini=INT_MAX;
         for(int i=0;i<n;i++)
         {
-            mini=min(mini,recur(triangle.size()-1,i,triangle,dp));
+            mini=min(mini,dp[m-1][i]);
         }
         return mini;
     }
