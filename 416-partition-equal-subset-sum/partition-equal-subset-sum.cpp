@@ -1,29 +1,35 @@
 class Solution {
-private:
-    bool generateSubset(int index, vector<int>& nums, int target, int sum,vector<vector<int>>& dp) {
-        if (sum == target)
-            return true;
-        if (index == nums.size() || sum > target)
-            return false;
-        if (dp[index][sum] != -1)
-            return dp[index][sum];
-        bool include =
-            generateSubset(index + 1, nums, target, sum + nums[index],dp);
-        bool exclude = generateSubset(index + 1, nums, target, sum,dp);
-        return dp[index][sum]=include || exclude;
-    }
-
 public:
     bool canPartition(vector<int>& nums) {
-        int totalSum = 0;
-        for (int i = 0; i < nums.size(); i++) {
-            totalSum += nums[i];
+        int n=nums.size();
+        int sum=0;
+        for(int i=0;i<n;i++)
+        {
+            sum+=nums[i];
         }
-        if (totalSum % 2 != 0)
-            return false;
-
-        int target = totalSum / 2;
-        vector<vector<int>> dp(nums.size(),vector<int>(target,-1));
-        return generateSubset(0, nums, target, 0,dp);
+        if(sum&1) return false;
+        int target=sum/2;
+        vector<bool> prev(target+1,false);
+        vector<bool> cur(target+1,false);
+        prev[0]=cur[0]=true;
+        if(nums[0]<=target)
+        {
+            prev[nums[0]]=true;
+        }
+        for(int i=1;i<n;i++)
+        {
+            for(int k=1;k<=target;k++)
+            {
+                bool notTaken=prev[k];
+                bool taken=false;
+                if(nums[i]<=k)
+                {
+                    taken=prev[k-nums[i]];
+                }
+                cur[k]=notTaken || taken;
+            }
+            prev=cur;
+        }
+        return prev[target];
     }
 };
