@@ -1,24 +1,25 @@
 class Solution {
 public:
-    int recur(int ind1, int ind2, const string& word1, const string& word2,vector<vector<int>>& dp) {
-        if (ind1 < 1)
-            return ind2 ;
-        if (ind2 < 1)
-            return ind1 ;
-        if(dp[ind1][ind2]!=-1) return dp[ind1][ind2];
-        if (word1[ind1-1] == word2[ind2-1]) {
-            return dp[ind1][ind2]=recur(ind1 - 1, ind2 - 1, word1, word2,dp);
-        }
-        int replace = 1 + recur(ind1 - 1, ind2 - 1, word1, word2,dp);
-        int del = 1 + recur(ind1 - 1, ind2, word1, word2,dp);
-        int ins = 1 + recur(ind1, ind2 - 1, word1, word2,dp);
-        return dp[ind1][ind2]=min({replace, del, ins});
-    }
-
     int minDistance(string word1, string word2) {
         int n1 = word1.size();
         int n2 = word2.size();
-        vector<vector<int>> dp(n1+1,vector<int>(n2+1,-1));
-        return recur(n1,n2, word1, word2,dp);
+        vector<vector<int>> dp(n1 + 1, vector<int>(n2 + 1, 0));
+        for (int ind2 = 1; ind2 <= n2; ind2++) {
+            dp[0][ind2] = ind2;
+        }
+        for (int ind1 = 1; ind1 <= n1; ind1++) {
+            dp[ind1][0] = ind1;
+        }
+        for (int ind1 = 1; ind1 <= n1; ind1++) {
+            for (int ind2 = 1; ind2 <= n2; ind2++) {
+                if (word1[ind1 - 1] == word2[ind2 - 1]) {
+                    dp[ind1][ind2] = dp[ind1 - 1][ind2 - 1];
+                } else
+                    dp[ind1][ind2] =
+                        1 + min({dp[ind1 - 1][ind2 - 1], dp[ind1 - 1][ind2],
+                                 dp[ind1][ind2 - 1]});
+            }
+        }
+        return dp[n1][n2];
     }
 };
