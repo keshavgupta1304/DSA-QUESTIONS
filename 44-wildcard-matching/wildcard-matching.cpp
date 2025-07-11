@@ -1,30 +1,36 @@
 class Solution {
 public:
-    bool isAllStars(const string& p,int j)
-    {
-        for(int i=0;i<=j;i++)
-        {
-            if(p[i]!='*') return false;
+    bool isAllStars(const string& p, int j) {
+        for (int i = 0; i <= j; i++) {
+            if (p[i] != '*')
+                return false;
         }
         return true;
     }
-    int recur(int i,int j,const string& s,const string& p,vector<vector<int>>& dp)
-    {
-        if(i==0 && j==0) return true;
-        if(i>0 && j==0) return false;
-        if(i==0 && j>=1) return isAllStars(p,j-1);
-        if(dp[i][j]!=-1) return dp[i][j];
-        if(s[i-1]==p[j-1] || p[j-1]=='?') return dp[i][j]=recur(i-1,j-1,s,p,dp);
-        else
-        {
-            if(p[j-1]=='*') return dp[i][j]=recur(i-1,j,s,p,dp) || recur(i,j-1,s,p,dp);
-            else return false;
-        }
-    }
     bool isMatch(string s, string p) {
-        int n=s.size();
-        int m=p.size();
-        vector<vector<int>> dp(n+1,vector<int>(m+1,-1));
-        return recur(n,m,s,p,dp);
+        int n = s.size();
+        int m = p.size();
+        vector<bool> prev(m+1,false);
+        vector<bool> curr(m+1,false);
+        prev[0] = true;
+        prev[1]=p[0]=='*';
+        for (int j = 2; j <= m; j++) {
+            prev[j] = (p[j-1]=='*') & (prev[j-1]);
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                if (s[i - 1] == p[j - 1] || p[j - 1] == '?')
+                    curr[j] = prev[j - 1];
+                else {
+                    if (p[j - 1] == '*')
+                        curr[j] = prev[j] ||
+                                          curr[j - 1];
+                    else
+                        curr[j]=false;
+                }
+            }
+            prev=curr;
+        }
+        return prev[m];
     }
 };
