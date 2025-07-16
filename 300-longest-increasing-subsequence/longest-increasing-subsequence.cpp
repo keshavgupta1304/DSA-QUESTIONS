@@ -1,25 +1,30 @@
 class Solution {
 public:
-    vector<vector<int>> memo;
-    int solve(int index, int lastValue_index, const vector<int>& nums) {
-        if (index < 0) {
-            return 0;
-        }
-        if (memo[index][lastValue_index] != -1) {
-            return memo[index][lastValue_index];
-        }
-        int exclude = solve(index - 1, lastValue_index, nums);
-        int include = 0;
-        if (lastValue_index == nums.size() || nums[index] < nums[lastValue_index]) {
-            include = 1 + solve(index - 1, index, nums);
-        }
-        return memo[index][lastValue_index] = max(include, exclude);
-    }
-
+    // int recur(int ind, int prev_ind, const vector<int>& nums,
+    //           vector<vector<int>>& dp) {
+    //     if (ind == nums.size())
+    //         return 0;
+    //     if (dp[ind][prev_ind] != -1)
+    //         return dp[ind][prev_ind];
+    //     int len = recur(ind + 1, prev_ind, nums, dp);
+    //     if (prev_ind == 0 || nums[ind] > nums[prev_ind - 1]) {
+    //         len = max(len, 1 + recur(ind + 1, ind + 1, nums, dp));
+    //     }
+    //     return dp[ind][prev_ind] = len;
+    // }
     int lengthOfLIS(vector<int>& nums) {
         int n = nums.size();
-        if (n == 0) return 0;
-        memo.resize(n, vector<int>(n + 1, -1));
-        return solve(n - 1, n, nums);
+        vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
+        vector<int> curr(n+1,0);
+        for (int ind = n - 1; ind >= 0; ind--) {
+            for (int prev_ind = n; prev_ind >= 0; prev_ind--) {
+                int len = dp[ind + 1][prev_ind];
+                if (prev_ind == 0 || nums[ind] > nums[prev_ind - 1]) {
+                    len = max(len, 1 + dp[ind + 1][ind + 1]);
+                }
+                dp[ind][prev_ind] = len;
+            }
+        }
+        return dp[0][0];
     }
 };
