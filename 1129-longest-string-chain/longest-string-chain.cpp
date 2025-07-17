@@ -37,7 +37,20 @@ public:
             return a.size()<b.size();
         });
         int n=words.size();
-        vector<vector<int>> dp(n,vector<int>(n,-1));
-        return recur(0,0,words,dp);
+        // vector<vector<int>> dp(n,vector<int>(n,-1));
+        vector<int> dp(n,1);
+        int maxi=0;
+        for(int i=0;i<n;i++)
+        {
+            for(int prevInd=0;prevInd<i;prevInd++)
+            {
+                if(helper(words[i],words[prevInd]))
+                {
+                    dp[i]=max(dp[i],1+dp[prevInd]);
+                }
+            }
+            if(dp[i]>dp[maxi]) maxi=i;
+        }
+        return dp[maxi];
     }
 };
