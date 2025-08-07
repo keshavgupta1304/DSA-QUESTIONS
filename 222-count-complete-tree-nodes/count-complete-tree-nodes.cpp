@@ -12,22 +12,30 @@
 class Solution {
 public:
     int countNodes(TreeNode* root) {
-        if(root==nullptr) return 0;
-        int ans=0;
-        queue<TreeNode*> q;
-        q.push(root);
-        while(!q.empty())
-        {
-            int sz=q.size();
-            ans+=sz;
-            for(int i=0;i<sz;i++)
-            {
-                auto node=q.front();
-                q.pop();
-                if(node->left!=nullptr) q.push(node->left);
-                if(node->right!=nullptr) q.push(node->right);
-            }
+        if (root == NULL) {
+            return 0;
         }
-        return ans;
+        int lh = findHeightLeft(root);
+        int rh = findHeightRight(root);
+        if (lh == rh) {
+            return (1 << lh) - 1; 
+        }
+        return 1 + countNodes(root->left) + countNodes(root->right);
+    }
+    int findHeightLeft(TreeNode* node) {
+        int height = 0;
+        while (node) {
+            height++;
+            node = node->left;
+        }
+        return height;
+    }
+    int findHeightRight(TreeNode* node) {
+        int height = 0;
+        while (node) {
+            height++;
+            node = node->right;
+        }
+        return height;
     }
 };
