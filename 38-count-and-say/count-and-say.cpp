@@ -1,35 +1,23 @@
 class Solution {
-private:
-    string runLenEnc(string s)
-    {
-        int cnt=0;
-        string result="";
-        char ch;
-        for(int i=0;i<s.length();i++)
-        {
-            if(cnt==0)
-            {
-                ch=s[i];
-                cnt=1;
-            }
-            else if(s[i]!=ch)
-            {
-                result+=to_string(cnt)+ch;
-                ch=s[i];
-                cnt=1;
-            }
-            else
-            {
-                cnt++;
-            }
-        }
-        if(cnt>0) result+=to_string(cnt)+ch;
-        return result;
-    }
 public:
     string countAndSay(int n) {
-        if(n==1) return "1";
-        string curr=countAndSay(n-1);
-        return runLenEnc(curr);
+        if (n == 1) {
+            return "1";
+        }
+        string s = "1";
+        for (int i = 2; i <= n; i++) {
+            string t = "";
+            for (int j = 0; j < s.length(); j++) {
+                int c = 1;
+                while (j + 1 < s.length() && s[j] == s[j + 1]) {
+                    c++;
+                    j++;
+                }
+                t += to_string(c);
+                t += s[j];
+            }
+            s = t;
+        }
+        return s;
     }
 };
