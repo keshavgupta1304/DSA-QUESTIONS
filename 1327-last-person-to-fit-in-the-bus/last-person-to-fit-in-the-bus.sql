@@ -1,8 +1,12 @@
 -- Write your PostgreSQL query statement below
-select max(q1.person_name) as person_name
-from Queue q1
-join Queue q2 on q1.turn>=q2.turn
-group by q1.turn
-having sum(q2.weight)<=1000
-order by sum(q2.weight) desc
+with total_weight_by_turn (person_name,total_weight) as
+    (
+        select person_name,
+        sum(weight) over(order by turn) as total_weight
+        from Queue
+    )
+select t.person_name
+from total_weight_by_turn t
+where t.total_weight<=1000
+order by t.total_weight desc
 limit 1;
